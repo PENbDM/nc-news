@@ -1,15 +1,20 @@
-// ArticlePage.js
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../components/Header'
+import CreateComment from '../components/CreateComment';
 import CommentsCard from '../components/CommentsCard';
+import { useContext } from 'react';
+import { UserContext } from '../UserContext'
 function ArticlePage() {
   const { id } = useParams();
   const [article, setArticle] = useState(null);
   const [comments, setComments] = useState([]);
   const [showComments,setShowComments] = useState(false)
-  console.log(comments);
+  const [createComment,setCreateComment] = useState(false)
+  const [showConfirmation,setShowConfirmation] = useState(false)
+  const userConsume = useContext(UserContext)
+  const user = userConsume.user;
   useEffect(() => {
     axios.get(`https://pen-nc-news.onrender.com/api/articles/${id}`).then((res) => {
       setArticle(res.data);
@@ -26,6 +31,8 @@ function ArticlePage() {
       .then((res) => {
         setComments(res.data);
         setShowComments(true)
+        setShowConfirmation(false)
+        setCreateComment(false)
       })
       .catch((error) => {
         console.error('Error fetching comments:', error);
@@ -53,11 +60,22 @@ function ArticlePage() {
 
   const handleVoteFor = () => {
     handleVote(1);
+    setCreateComment(false)
+    setShowConfirmation(false)
+    hideComments()
   };
   
   const handleVoteDown = () => {
     handleVote(-1);
+    setCreateComment(false)
+    setShowConfirmation(false)
+    hideComments()
   };
+  const handleCreateComment = () =>{
+    setCreateComment(true)
+    hideComments()
+    setShowConfirmation(false)
+  }
   return (
     <>
     <Header/>
@@ -73,19 +91,27 @@ function ArticlePage() {
         </div>
         <div className='mt-10 mb-10 w-50 flex justify-between'>
           {showComments===true ? <button className='p-2 border border-solid border-red-500' onClick={hideComments}>Hide Comments</button> : <button className='p-2 border border-solid border-green-500' onClick={handleComments}>Get Comments</button>}
+          <button onClick={handleCreateComment} className='p-2 border border-solid border-green-500'>Create Comment</button>
           <button onClick={handleVoteFor} className='p-2 border border-solid border-green-500'>Vote</button>
           <button onClick={handleVoteDown} className='p-2 border border-solid border-green-500'>Vote down</button>
         </div>
       </div>
-      {
-  showComments && (
+
+      <div style={{ maxWidth: '1600px' }} className='mx-auto flex justify-center'>
+      {showConfirmation===true ? <p className='font-medium'>Congratulations, you added a comment.</p> : null}
+      </div>
+      {createComment &&(
+    <div style={{ maxWidth: '1600px' }} className='mx-auto flex flex-col'>
+      <CreateComment user={user} article_id={article.article_id} setCreateComment={setCreateComment} setShowConfirmation={setShowConfirmation}/>
+    </div>
+    )}
+      {showComments && (
     <div style={{ maxWidth: '1600px' }} className='mx-auto flex flex-row flex-wrap justify-center'>
       {comments.map((comment) => (
         <CommentsCard key={comment.comment_id} comment={comment} />
       ))}
     </div>
-  )
-}
+  )}
   </>
   );
 }
