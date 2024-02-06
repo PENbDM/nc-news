@@ -1,11 +1,48 @@
-import { useState } from 'react'
-
+import { useState,useEffect } from 'react'
+import {Route,Routes,Navigate} from 'react-router-dom'
+import Home from './pages/Home'
+import User from './pages/User'
+import Auth from './pages/Auth'
+import ApiDescription from './pages/ApiDescription'
+import Articles from './pages/Articles'
+import Topics from './pages/Topics'
+import ArticlePage from './pages/ArticlePage'
+import Comments from './pages/Comments'
+import { UserContext } from './UserContext'
 function App() {
-
+  const user = JSON.parse(localStorage.getItem('userData'));
+  const [isAuth,setIsAuth] = useState(false)
+  
+  useEffect(()=>{
+    if(user!==null){
+      setIsAuth(true)
+    }
+  })
   return (
-    <div>
-    <h1 className='text-3xl font-bold underline'>I am Dima</h1>
-    </div>
+  <UserContext.Provider value={{user,setIsAuth}}>
+   <Routes>
+    <Route path='/' element={<Home/>}/> 
+    {user ? (
+          <Route path="/auth" element={<Navigate to="/user" />} />
+        ) : (
+          <Route path="/auth" element={<Auth/>} />
+      )}
+       {user ? (
+          <Route path="/user" element={<User />} />
+        ) : (
+          <Route path="/user" element={<Navigate to="/auth" />} />
+        )}
+        {user && (
+          <>
+          <Route path='/articles/:id' element={<ArticlePage />} /> 
+          <Route path='/api' element={<ApiDescription/>} />
+          <Route path='/articles' element={<Articles/>} />
+          <Route path='/topics' element={<Topics/>} />
+          <Route path='/comments' element={<Comments/>} />
+          </>
+        )}
+      </Routes>
+   </UserContext.Provider>
   )
 }
 
