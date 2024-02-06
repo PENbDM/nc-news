@@ -10,7 +10,6 @@ function Articles() {
       setArticles(res.data)
     })
   },[])
-  console.log(articles);
   return (
     <div>    
       <Header/>
