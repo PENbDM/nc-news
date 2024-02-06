@@ -1,8 +1,10 @@
 import React from 'react'
+import Header from '../components/Header'
 
 function Topics() {
   return (
-    <div>Topics</div>
+    <div>      <Header/>
+    Topics</div>
   )
 }
 

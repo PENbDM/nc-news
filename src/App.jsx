@@ -3,7 +3,11 @@ import {Route,Routes,Navigate} from 'react-router-dom'
 import Home from './pages/Home'
 import User from './pages/User'
 import Auth from './pages/Auth'
-import { createContext } from 'react'
+import ApiDescription from './pages/ApiDescription'
+import Articles from './pages/Articles'
+import Topics from './pages/Topics'
+import ArticlePage from './pages/ArticlePage'
+import Comments from './pages/Comments'
 import { UserContext } from './UserContext'
 function App() {
   const user = JSON.parse(localStorage.getItem('userData'));
@@ -28,7 +32,16 @@ function App() {
         ) : (
           <Route path="/user" element={<Navigate to="/auth" />} />
         )}
-   </Routes>
+        {user && (
+          <>
+          <Route path='/articles/:id' element={<ArticlePage />} /> 
+          <Route path='/api' element={<ApiDescription/>} />
+          <Route path='/articles' element={<Articles/>} />
+          <Route path='/topics' element={<Topics/>} />
+          <Route path='/comments' element={<Comments/>} />
+          </>
+        )}
+      </Routes>
    </UserContext.Provider>
   )
 }

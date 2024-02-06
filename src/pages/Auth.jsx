@@ -26,7 +26,7 @@ function Auth() {
   return (
     <div>
         <Header/>
-        <p className='flex mt-5 justify-center font-semibold text-[20px]'>Please, choose user which you want to be</p>
+        <p className='flex mt-5 justify-center font-semibold text-[20px]'>Please choose the user you want to be.</p>
         <div style={{maxWidth:'1600px'}} className='flex justify-center pt-10 gap-10 flex-wrap flex-row mx-auto'>
         {users.map((user) => (
         <UserCards key={user.username} user={user} onClick={handleCardClick} />
