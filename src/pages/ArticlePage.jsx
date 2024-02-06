@@ -16,7 +16,7 @@ function ArticlePage() {
   }, [id]);
 
   if (!article) {
-    return <div>Loading...</div>;
+    return <div>Loading....</div>;
   }
   const formattedDate = new Date(article.created_at).toLocaleString();
 
