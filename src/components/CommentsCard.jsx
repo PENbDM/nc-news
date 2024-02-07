@@ -2,7 +2,7 @@ import React from 'react'
 
 function CommentsCard({comment}) {
     const formattedDate = new Date(comment.created_at).toLocaleString();
-  return (
+      return (
     <div className='border border-solid border-green-500  m-4 w-50'>
         <div className='flex flex-col items-center'>
         <p className='text-center'>Comment: {comment.body}</p>

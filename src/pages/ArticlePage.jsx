@@ -4,6 +4,8 @@ import axios from 'axios';
 import Header from '../components/Header'
 import CreateComment from '../components/CreateComment';
 import CommentsCard from '../components/CommentsCard';
+import CommentsCardUser from '../components/CommentsCardUser';
+import PopUpWindows from '../components/PopUpWindows';
 import { useContext } from 'react';
 import { UserContext } from '../UserContext'
 function ArticlePage() {
@@ -13,8 +15,11 @@ function ArticlePage() {
   const [showComments,setShowComments] = useState(false)
   const [createComment,setCreateComment] = useState(false)
   const [showConfirmation,setShowConfirmation] = useState(false)
+  const [showConfirmationDelete,setConfirmationDelete] = useState(false)
   const userConsume = useContext(UserContext)
   const user = userConsume.user;
+  const commentsByCurrentUser = comments.filter((comment)=> comment.author === user.username)
+  const commentsByDifferentUser = comments.filter((comment)=> comment.author !== user.username)
   useEffect(() => {
     axios.get(`https://pen-nc-news.onrender.com/api/articles/${id}`).then((res) => {
       setArticle(res.data);
@@ -39,6 +44,7 @@ function ArticlePage() {
       });
   };
   const hideComments = () => {
+    setConfirmationDelete(false)
     setShowComments(false)
   }
   const handleVote = (voteValue) => {
@@ -76,6 +82,16 @@ function ArticlePage() {
     hideComments()
     setShowConfirmation(false)
   }
+  const handleDeleteComment = (id)=>{
+    axios.delete(`https://pen-nc-news.onrender.com/api/comments/${id}`).then((res)=>{
+      if(res.status===204){
+        setConfirmationDelete(true)
+        handleComments()
+      }
+    })
+  }
+
+
   return (
     <>
     <Header/>
@@ -105,13 +121,35 @@ function ArticlePage() {
       <CreateComment user={user} article_id={article.article_id} setCreateComment={setCreateComment} setShowConfirmation={setShowConfirmation}/>
     </div>
     )}
-      {showComments && (
-    <div style={{ maxWidth: '1600px' }} className='mx-auto flex flex-row flex-wrap justify-center'>
-      {comments.map((comment) => (
-        <CommentsCard key={comment.comment_id} comment={comment} />
-      ))}
-    </div>
-  )}
+ {showComments && (
+  <div style={{ maxWidth: '1600px' }} className='mx-auto flex flex-col justify-center'>
+    {commentsByCurrentUser.length === 0 ? <p className='flex justify-center font-semibold mb-4'>You dont have your own comments, press create comment</p>
+      : (
+        <>
+          <p className='flex justify-center font-semibold'>Your Comments</p>
+          {showConfirmationDelete===true ? <div className='mt-2 flex justify-center'><PopUpWindows/></div> : null }
+          <div style={{ maxWidth: '1600px' }} className='mx-auto flex flex-row flex-wrap justify-center'>
+            {commentsByCurrentUser.map((commentByCurrentUser) => (
+              <CommentsCardUser key={commentByCurrentUser.comment_id}  commentByCurrentUser={commentByCurrentUser} handleDeleteComment={handleDeleteComment} />
+            ))}
+          </div>
+        </>
+      )}
+      {
+        commentsByDifferentUser.length===0 ? <p className='flex justify-center font-semibold'>No comments from others users</p>
+        : (
+          <>
+          <p className='flex justify-center font-semibold'>Comments By Others Users</p>
+          <div style={{ maxWidth: '1600px' }} className='mx-auto flex flex-row flex-wrap justify-center'>
+          {commentsByDifferentUser.map((comment) => (
+              <CommentsCard key={comment.comment_id} comment={comment} />
+            ))}
+          </div>
+          </>
+        )
+      }
+  </div>
+)}
   </>
   );
 }
