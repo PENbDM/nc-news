@@ -5,7 +5,6 @@ import { UserContext } from '../UserContext'
 function Home() {
   const userConsume = useContext(UserContext)
   const user = userConsume.user;
-  console.log(user);
   return (
     <div>
       <Header/>

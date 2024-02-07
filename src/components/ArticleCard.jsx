@@ -1,7 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 
-function ArticleCard({article,onClick}) {
+function ArticleCard({article}) {
+  console.log(article);
     const formattedDate = new Date(article.created_at).toLocaleString();
 
   return (
