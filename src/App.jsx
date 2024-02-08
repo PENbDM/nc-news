@@ -10,6 +10,7 @@ import ArticlePage from './pages/ArticlePage'
 import Comments from './pages/Comments'
 import PageNotFound from './components/PageNotFound'
 import { UserContext } from './UserContext'
+import ArticleNotFound from './components/ArticleNotFound'
 function App() {
   const user = JSON.parse(localStorage.getItem('userData'));
   const [isAuth,setIsAuth] = useState(false)
@@ -43,6 +44,8 @@ function App() {
           </>
         )}
         <Route path="*" element={<PageNotFound />} />
+        <Route path="/article-not-found" element={<ArticleNotFound />} />
+
       </Routes>
    </UserContext.Provider>
   )

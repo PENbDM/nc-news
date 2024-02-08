@@ -8,6 +8,8 @@ import CommentsCardUser from '../components/CommentsCardUser';
 import PopUpWindows from '../components/PopUpWindows';
 import { useContext } from 'react';
 import { UserContext } from '../UserContext'
+import { useNavigate } from 'react-router-dom';
+import ArticleNotFound from '../components/ArticleNotFound';
 function ArticlePage() {
   const { id } = useParams();
   const [article, setArticle] = useState(null);
@@ -16,15 +18,20 @@ function ArticlePage() {
   const [createComment,setCreateComment] = useState(false)
   const [showConfirmation,setShowConfirmation] = useState(false)
   const [showConfirmationDelete,setConfirmationDelete] = useState(false)
+  const navigate = useNavigate(); 
   const userConsume = useContext(UserContext)
   const user = userConsume.user;
   const commentsByCurrentUser = comments.filter((comment)=> comment.author === user.username)
   const commentsByDifferentUser = comments.filter((comment)=> comment.author !== user.username)
   useEffect(() => {
     axios.get(`https://pen-nc-news.onrender.com/api/articles/${id}`).then((res) => {
-      setArticle(res.data);
-    });
-  }, [id]);
+    setArticle(res.data);
+    }).catch((err)=>{
+      if(err.response.data.error){
+          navigate('/article-not-found')
+      }
+    })
+  }, [id,navigate]);
 
   if (!article) {
     return <div>Loading....</div>;
@@ -88,6 +95,7 @@ function ArticlePage() {
         setConfirmationDelete(true)
         handleComments()
       }
+      
     })
   }
 
