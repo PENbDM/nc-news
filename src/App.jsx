@@ -8,6 +8,7 @@ import Articles from './pages/Articles'
 import Topics from './pages/Topics'
 import ArticlePage from './pages/ArticlePage'
 import Comments from './pages/Comments'
+import PageNotFound from './components/PageNotFound'
 import { UserContext } from './UserContext'
 function App() {
   const user = JSON.parse(localStorage.getItem('userData'));
@@ -41,6 +42,7 @@ function App() {
           <Route path='/comments' element={<Comments/>} />
           </>
         )}
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
    </UserContext.Provider>
   )
