@@ -43,9 +43,8 @@ function App() {
           <Route path='/comments' element={<Comments/>} />
           </>
         )}
-        <Route path="*" element={<PageNotFound />} />
         <Route path="/article-not-found" element={<ArticleNotFound />} />
-
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
    </UserContext.Provider>
   )
