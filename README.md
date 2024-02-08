@@ -4,7 +4,7 @@
 
 ℹ️ Welcome, to the fresh news. You can:
 - Login
-- Select all Articles, sort them
+- Select all Articles, sort them.
 - Leave your comment, vote, delete comment
 - Select all Topics, base on topic get articles.
 
